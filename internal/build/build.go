@@ -2,7 +2,7 @@ package build
 
 import (
 	"log"
-	
+
 	travis "github.com/Ableton/go-travis"
 )
 
@@ -12,7 +12,7 @@ func LastBuild(user string, repo string) string {
 	name := user + "/" + repo
 	builds, _, _, _, err := client.Builds.ListFromRepository(name, nil)
 	if err != nil {
-		log.Fatal (err)
+		log.Fatal(err)
 	}
 
 	return builds[len(builds)-1].State

@@ -1,6 +1,6 @@
-package gh 
+package gh
 
-import(
+import (
 	"context"
 	"log"
 
@@ -8,10 +8,10 @@ import(
 )
 
 //GetIssues gets all open issues for a given user and repo and returns the total
-func GetIssues (user string, repo string) (int, int) {
+func GetIssues(user string, repo string) (int, int) {
 	client := github.NewClient(nil)
 	opt := new(github.IssueListByRepoOptions)
-	
+
 	var allIssues []*github.Issue
 	for {
 		issues, resp, err := client.Issues.ListByRepo(context.Background(), user, repo, opt)
@@ -26,7 +26,7 @@ func GetIssues (user string, repo string) (int, int) {
 
 		opt.Page = resp.NextPage
 	}
-	
+
 	//Filter out PR's because they're also included
 	var list []github.Issue
 	var pr int
