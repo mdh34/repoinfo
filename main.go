@@ -7,6 +7,7 @@ import (
 	build "repoinfo/internal/build"
 	gh "repoinfo/internal/gh"
 
+	"github.com/fatih/color"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -21,7 +22,13 @@ func main() {
 	}
 
 	issues, pr := gh.GetIssues(opts.User, opts.Repo)
-	fmt.Printf("Last build: %v\n", build.LastBuild(opts.User, opts.Repo))
+	last := build.LastBuild(opts.User, opts.Repo)
+
+	if last == "passed" {
+		color.Green("Last build: %v\n", last)
+	} else {
+		color.Red("Last build: %v\n", last)
+	}
 	fmt.Printf("%v issues open\n", issues)
 	fmt.Printf("%v pull requests open\n", pr)
 }
