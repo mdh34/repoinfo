@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	autodetect "repoinfo/internal/autodetect"
 	build "repoinfo/internal/build"
 	gh "repoinfo/internal/gh"
 
@@ -13,12 +14,15 @@ import (
 
 func main() {
 	var opts struct {
-		User string `short:"u" long:"user" description:"the repo user" required:"true"`
-		Repo string `short:"r" long:"repo" description:"the repo name" required:"true"`
+		User string `short:"u" long:"user" description:"the repo user" required:"false"`
+		Repo string `short:"r" long:"repo" description:"the repo name" required:"false"`
 	}
 	_, err := flags.Parse(&opts)
 	if err != nil {
 		os.Exit(1)
+	}
+	if opts.User == "" || opts.Repo == "" {
+		opts.User, opts.Repo = autodetect.GetRemoteDetails()
 	}
 
 	issues, pr := gh.GetIssues(opts.User, opts.Repo)
