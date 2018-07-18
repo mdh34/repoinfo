@@ -4,10 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	autodetect "repoinfo/internal/autodetect"
-	build "repoinfo/internal/build"
-	gh "repoinfo/internal/gh"
-
 	"github.com/fatih/color"
 	"github.com/jessevdk/go-flags"
 )
@@ -22,11 +18,11 @@ func main() {
 		os.Exit(1)
 	}
 	if opts.User == "" || opts.Repo == "" {
-		opts.User, opts.Repo = autodetect.GetRemoteDetails()
+		opts.User, opts.Repo = GetRemoteDetails()
 	}
 
-	issues, pr := gh.GetIssues(opts.User, opts.Repo)
-	last := build.LastBuild(opts.User, opts.Repo)
+	issues, pr := GetIssues(opts.User, opts.Repo)
+	last := LastBuild(opts.User, opts.Repo)
 
 	if last == "passed" {
 		color.Green("Last build: %v\n", last)

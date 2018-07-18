@@ -1,4 +1,4 @@
-package autodetect
+package main
 
 import (
 	"log"
