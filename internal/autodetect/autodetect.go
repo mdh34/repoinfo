@@ -29,8 +29,12 @@ func GetRemoteDetails() (string, string) {
 
 	repoName := url[strings.LastIndex(url, "/"):]
 	repoName = strings.Trim(repoName, "/")
-	userName := url[strings.Index(url, "/"):strings.LastIndex(url, "/")]
-	userName = strings.Trim(userName, "/")
+	var userName string
+	if strings.Contains(url, "@") {
+		userName = url[strings.Index(url, ":")+1:strings.LastIndex(url, "/")]
+	} else {
+		userName = url[strings.Index(url, "/")+1:strings.LastIndex(url, "/")]
+	}
 
 	return userName, repoName
 
