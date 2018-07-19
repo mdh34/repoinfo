@@ -13,6 +13,8 @@ func LastBuild(user string, repo string) string {
 	builds, _, _, _, err := client.Builds.ListFromRepository(name, nil)
 	if err != nil {
 		log.Fatal(err)
+	} else if len(builds) == 0 {
+		return ""
 	}
 
 	return builds[len(builds)-1].State
