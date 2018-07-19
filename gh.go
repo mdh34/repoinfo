@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"strings"
 
 	"github.com/google/go-github/github"
 )
@@ -15,7 +16,9 @@ func GetIssues(user string, repo string) (int, int) {
 	var allIssues []*github.Issue
 	for {
 		issues, resp, err := client.Issues.ListByRepo(context.Background(), user, repo, opt)
-		if err != nil {
+		if err != nil && strings.Contains(err.Error(), "404") {
+			log.Fatal("No GitHub repo found")
+		} else if err != nil {
 			log.Fatal(err)
 		}
 
