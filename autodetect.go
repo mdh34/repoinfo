@@ -9,7 +9,7 @@ import (
 )
 
 //GetRemoteDetails interprets the remote url and parses to guess a user and repository name
-func GetRemoteDetails() (string, string) {
+func GetRemoteDetails() (string, string, string) {
 	cwd, err := os.Getwd()
 	repo, err := git.PlainOpen(cwd)
 	if err != nil {
@@ -20,12 +20,19 @@ func GetRemoteDetails() (string, string) {
 	if err != nil {
 		log.Fatal(err)
 	} else if remote == nil {
-		return "", ""
+		return "", "", ""
 	}
 
 	url := remote.Config().URLs[0]
 	url = strings.Replace(url, ".git", "", -1)
 	url = strings.Replace(url, "https://", "", -1)
+
+	var service string
+	if strings.Contains(url, "gitlab") {
+		service = "gitlab"
+	} else if strings.Contains(url, "github") {
+		service = "github"
+	}
 
 	repoName := url[strings.LastIndex(url, "/"):]
 	repoName = strings.Trim(repoName, "/")
@@ -36,6 +43,6 @@ func GetRemoteDetails() (string, string) {
 		userName = url[strings.Index(url, "/")+1 : strings.LastIndex(url, "/")]
 	}
 
-	return userName, repoName
+	return userName, repoName, service
 
 }
