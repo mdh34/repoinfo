@@ -8,8 +8,8 @@ import (
 	"github.com/google/go-github/github"
 )
 
-//GetIssues gets all open issues for a given user and repo and returns the total
-func GetIssues(user string, repo string) (int, int) {
+//GetGithubIssues gets all open GitHub issues and PR's for a given user and repo and returns the total
+func GetGithubIssues(user string, repo string) (int, int) {
 	client := github.NewClient(nil)
 	opt := new(github.IssueListByRepoOptions)
 
