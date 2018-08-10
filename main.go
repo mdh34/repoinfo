@@ -19,8 +19,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if opts.User == "" || opts.Repo == "" || opts.Service == "" {
-		opts.User, opts.Repo, opts.Service = GetRemoteDetails()
+	autoUser, autoRepo, autoService := GetRemoteDetails()
+	if opts.User == "" {
+		opts.User = autoUser
+	} 
+	if opts.Repo == "" {
+		opts.Repo = autoRepo
+	}
+	if opts.Service == "" {
+		opts.Service = autoService
 	}
 
 	var issues, pr int
