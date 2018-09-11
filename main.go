@@ -22,7 +22,7 @@ func main() {
 	autoUser, autoRepo, autoService := GetRemoteDetails()
 	if opts.User == "" {
 		opts.User = autoUser
-	} 
+	}
 	if opts.Repo == "" {
 		opts.Repo = autoRepo
 	}
@@ -30,18 +30,18 @@ func main() {
 		opts.Service = autoService
 	}
 
-	var issues, pr int
-	if opts.Service == "gitlab" {
-		issues, pr = GetGitlabIssues(opts.User, opts.Repo)
-	} else if opts.Service == "github" {
-		issues, pr = GetGithubIssues(opts.User, opts.Repo)
-	}
-
 	last := LastBuild(opts.User, opts.Repo)
 	if last == "passed" {
 		color.Green("Last build: %v\n", last)
 	} else {
 		color.Red("Last build: %v\n", last)
+	}
+
+	var issues, pr int
+	if opts.Service == "gitlab" {
+		issues, pr = GetGitlabIssues(opts.User, opts.Repo)
+	} else if opts.Service == "github" {
+		issues, pr = GetGithubIssues(opts.User, opts.Repo)
 	}
 	fmt.Printf("%v issues open\n", issues)
 	fmt.Printf("%v pull requests open\n", pr)
