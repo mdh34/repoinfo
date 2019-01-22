@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"sync"
 
 	"github.com/xanzy/go-gitlab"
 )
 
 //GetGitlabIssues gets all open GitLab issues and MR's for a given user and repo and returns the total
-func GetGitlabIssues(user string, repo string) (int, int) {
+func GetGitlabIssues(user string, repo string, wg *sync.WaitGroup) {
 	path := user + "/" + repo
 	git := gitlab.NewClient(nil, "")
 
@@ -56,6 +58,7 @@ func GetGitlabIssues(user string, repo string) (int, int) {
 
 		mergeOpt.Page = resp.NextPage
 	}
-
-	return len(allIssues), len(allMerge)
+	fmt.Printf("%v issues\n", len(allIssues))
+	fmt.Printf("%v merge requests\n", len(allMerge))
+	wg.Done()
 }
