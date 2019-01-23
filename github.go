@@ -2,14 +2,16 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/google/go-github/github"
 )
 
 //GetGithubIssues gets all open GitHub issues and PR's for a given user and repo and returns the total
-func GetGithubIssues(user string, repo string) (int, int) {
+func GetGithubIssues(user string, repo string, wg *sync.WaitGroup) {
 	client := github.NewClient(nil)
 	opt := new(github.IssueListByRepoOptions)
 
@@ -40,5 +42,8 @@ func GetGithubIssues(user string, repo string) (int, int) {
 			pr++
 		}
 	}
-	return len(list), pr
+
+	fmt.Printf("%v issues open\n", len(list))
+	fmt.Printf("%v pull requests open\n", pr)
+	wg.Done()
 }

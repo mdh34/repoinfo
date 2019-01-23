@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"os"
+	"sync"
 
-	"github.com/fatih/color"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -30,19 +29,16 @@ func main() {
 		opts.Service = autoService
 	}
 
-	last := LastBuild(opts.User, opts.Repo)
-	if last == "passed" {
-		color.Green("Last build: %v\n", last)
-	} else {
-		color.Red("Last build: %v\n", last)
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go LastBuild(opts.User, opts.Repo, &wg)
+
+	if opts.Service == "gitlab" {
+		go GetGitlabIssues(opts.User, opts.Repo, &wg)
+	} else if opts.Service == "github" {
+		go GetGithubIssues(opts.User, opts.Repo, &wg)
 	}
 
-	var issues, pr int
-	if opts.Service == "gitlab" {
-		issues, pr = GetGitlabIssues(opts.User, opts.Repo)
-	} else if opts.Service == "github" {
-		issues, pr = GetGithubIssues(opts.User, opts.Repo)
-	}
-	fmt.Printf("%v issues open\n", issues)
-	fmt.Printf("%v pull requests open\n", pr)
+	wg.Wait()
 }
